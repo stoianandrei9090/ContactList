@@ -83,30 +83,46 @@ public class Main {
         Address companyAdr3 = new Address("Bd. Unirii", 141, 12, "3", "217250", "Buhcarest", "Romania");
         u3.setCompany(new Company ("Another Company SRL", companyAdr3));
 
+        //user 4
+        User u4 = new User("Ilie", "Ionescu", "ionescu@yahoo.com", 66, new HashMap<>(), "plumber", false );
+        u4.getPhoneNumbers().put("home", new PhoneNumber("+40", "6344566"));
+        Address adrU4 = new Address("Mihai Eminescu", 12, 33, "2", "64221", "Bucharest", "Romania");
+        u4.setAddress(adrU4);
+        Address companyAdr4 = new Address("Mosilor", 100, 30, "3", "23000", "Bucharest", "Romania");
+        u4.setCompany(new Company ("Another Company SRL", companyAdr4));
+
         List<User> userList = new ArrayList<>();
         userList.add(u1);
         userList.add(u2);
         userList.add(u3);
+        userList.add(u4);
+
         return userList;
 
     }
 
     public static void printLetterMap(List<User> userList) {
 
-        Map<Character, List<User>> mapPrint  = userList.stream().sorted().collect(groupingBy(user -> user.getLastName().charAt(0)));;
-        for (Map.Entry<Character, List<User>> entry: mapPrint.entrySet()) {
+
+        TreeMap<Character, List<User>> mapPrint  = new TreeMap<>();
+        mapPrint.putAll(userList.stream().sorted().collect(groupingBy(user -> user.getLastName().charAt(0))));
+
+        for (Map.Entry<Character, List<User>> entry : mapPrint.entrySet()) {
 
             System.out.println("---------------------------------------------------------------------------------------");
             System.out.println(String.format("| %-"+85+"s|",entry.getKey()));
+            System.out.println("---------------------------------------------------------------------------------------");
 
             for (User userPrint : entry.getValue()) {
                 String output = String.format("| %-"+85+ "s|", userPrint.getFirstName()+" "+userPrint.getLastName());
                 System.out.println(output);
             }
+            System.out.println(String.format("| %-"+85+"s|","Users : "+entry.getValue().size()));
 
         }
 
         System.out.println("---------------------------------------------------------------------------------------");
+
     }
 
 }
