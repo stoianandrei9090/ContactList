@@ -9,4 +9,12 @@ public class PhoneNumber {
         this.countryCode = countryCode;
         this.number = number;
     }
+
+    @Override
+    public String toString() {
+        return "PhoneNumber{" +
+                "countryCode='" + countryCode + '\'' +
+                ", number='" + number + '\'' +
+                '}';
+    }
 }
