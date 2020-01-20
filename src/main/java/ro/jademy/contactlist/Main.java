@@ -15,16 +15,21 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class Main {
 
-
+    private static List<User> userList;
 
     public static void main(String[] args) {
 
-        List<User> userList = createUserList();
 
+        userList = createUserList();
+        Map <Integer, User> userIndexMap = printLetterMap(userList);
+        System.out.println(userIndexMap.get(insertUser()));
+
+
+    }
+
+    public static void printStuff(List<User> userList) {
         // list contact list in natural order
         userList.stream().sorted().forEach(System.out::println);
-
-
         // list contact list by a given criteria
         Predicate<User> ageCriteria = value -> value.getAge()>=18;
         Predicate<User> nameStartswith = value -> value.getLastName().startsWith("B");
@@ -51,10 +56,8 @@ public class Main {
         // groups user by city of address
         Map<String, List<User>> usersByCity = userList.stream().collect(groupingBy(user -> user.getAddress().getCity()));
 
-        // groups users by first letter of last name
-        printLetterMap(userList);
-
     }
+
 
     public static List<User> createUserList () {
 
@@ -101,11 +104,13 @@ public class Main {
 
     }
 
-    public static void printLetterMap(List<User> userList) {
+    public static Map<Integer, User> printLetterMap(List<User> userList) {
 
 
         TreeMap<Character, List<User>> mapPrint  = new TreeMap<>();
         mapPrint.putAll(userList.stream().sorted().collect(groupingBy(user -> user.getLastName().charAt(0))));
+        int userIndex = 0;
+        Map<Integer, User> userIndexMap= new HashMap<>();
 
         for (Map.Entry<Character, List<User>> entry : mapPrint.entrySet()) {
 
@@ -114,7 +119,10 @@ public class Main {
             System.out.println("---------------------------------------------------------------------------------------");
 
             for (User userPrint : entry.getValue()) {
-                String output = String.format("| %-"+85+ "s|", userPrint.getFirstName()+" "+userPrint.getLastName());
+
+                userIndex++;
+                String output = String.format("| %-"+85+ "s|", userIndex+" "+userPrint.getFirstName()+" "+userPrint.getLastName());
+                userIndexMap.put(userIndex, userPrint);
                 System.out.println(output);
             }
             System.out.println(String.format("| %-"+85+"s|","Users : "+entry.getValue().size()));
@@ -122,6 +130,26 @@ public class Main {
         }
 
         System.out.println("---------------------------------------------------------------------------------------");
+        return userIndexMap;
+
+    }
+
+    public static void printUserFromMap (Map <Integer, User> map, int i) {
+        System.out.println(map.get(i));
+    }
+
+    public static int insertUser() {
+        System.out.print("Insert user : ");
+        Scanner sc = new Scanner(System.in);
+        int intUser = 0;
+        try {
+            intUser = sc.nextInt();
+
+        } catch (InputMismatchException e) {
+            System.out.println("Insert int value!");
+            return insertUser();
+        }
+        return intUser;
 
     }
 

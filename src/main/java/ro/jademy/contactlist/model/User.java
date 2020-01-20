@@ -16,6 +16,7 @@ public class User implements Comparable <User> {
     private String jobTitle;
     private Company company;
 
+
     private boolean isFavorite;
 
     public User(String firstName, String lastName, String email, Integer age, Map<String, PhoneNumber> phoneNumbers, String jobTitle, boolean isFavorite) {
@@ -28,6 +29,7 @@ public class User implements Comparable <User> {
         this.jobTitle = jobTitle;
         this.company = company;
         this.isFavorite = isFavorite;
+
     }
 
     public String getFirstName() {
@@ -104,17 +106,17 @@ public class User implements Comparable <User> {
 
     @Override
     public String toString() {
-        return "User{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", age=" + age +
-                ", phoneNumbers=" + phoneNumbers +
-                ", address=" + address +
-                ", jobTitle='" + jobTitle + '\'' +
-                ", company=" + company +
-                ", isFavorite=" + isFavorite +
-                '}';
+        return
+                "first name : " + firstName + '\'' + "\n" +
+                "last name : " + lastName + '\'' + "\n" +
+                "email : " + email + '\'' + "\n" +
+                "age : " + age + "\n" + "\n" +
+                "phone number : " + phoneNumbers + "\n" +
+                "address : " + address + "\n" +
+                "job title : " + jobTitle + '\'' + "\n" +
+                "company : " + company + "\n" +
+                "favorite : " + isFavorite + "\n"
+                ;
     }
 
     @Override
