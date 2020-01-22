@@ -19,18 +19,19 @@ public class User implements Comparable <User> {
 
     private boolean isFavorite;
 
+
     public User(String firstName, String lastName, String email, Integer age, Map<String, PhoneNumber> phoneNumbers, String jobTitle, boolean isFavorite) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
         this.phoneNumbers = phoneNumbers;
-        this.address = address;
         this.jobTitle = jobTitle;
-        this.company = company;
         this.isFavorite = isFavorite;
 
     }
+
+
 
     public String getFirstName() {
         return firstName;

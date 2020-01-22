@@ -1,11 +1,9 @@
 package ro.jademy.contactlist;
 
-
 import ro.jademy.contactlist.model.Address;
 import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
-
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -21,9 +19,71 @@ public class Main {
 
 
         userList = createUserList();
-        Map <Integer, User> userIndexMap = printLetterMap(userList);
-        System.out.println(userIndexMap.get(insertUser()));
+       // Map <Integer, User> userIndexMap = printLetterMap(userList);
+       // System.out.println(userIndexMap.get(insertUser()));
 
+
+      /*  try {
+        User u = createUser("A1212lex", "Popescu", "apopescu@gmail.com", 29, new HashMap<>(), "programmer", true) ;
+        }
+        catch (InputNotValidException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+       */
+      User u = InsertUserKeyboard();
+
+    }
+
+    public static User InsertUserKeyboard () {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("First name : ");
+        String firstName = sc.next();
+        System.out.print("Second name: ");
+        String lastName = sc.next();
+        System.out.print("Email: ");
+        String email = sc.next();
+        System.out.print("Age: ");
+        Integer age = Integer.parseInt(sc.next());
+        System.out.print("Job title :");
+        String jobTitle = sc.next();
+
+        String yesNo = "";
+        while(!yesNo.toLowerCase().equals("y") && !yesNo.toLowerCase().equals("n")) {
+            System.out.print("Favorite (Y/N)? ");
+            yesNo = sc.next();
+        }
+        boolean isFavorite = yesNo.toLowerCase().equals("y") ? true : false;
+
+        User u;
+        try{
+           u = createUser(firstName, lastName, email, age, new HashMap<>(), jobTitle, isFavorite);
+        } catch (InputNotValidException e) {
+            System.out.println("Input not valid. "+ e.getMessage()+". Try again!");
+            return InsertUserKeyboard();
+        }
+
+        return u;
+
+    }
+
+
+    public static User createUser(String firstName, String lastName, String email, Integer age, Map<String, PhoneNumber> phoneNumbers, String jobTitle, boolean isFavorite) throws InputNotValidException {
+
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        if(firstName.length() <= 1 || !firstName.matches("^[a-zA-Z]*$")) throw new InputNotValidException("First name is not valid");
+        if(lastName.isEmpty()) throw new InputNotValidException("Last name can not be empty");
+        if(email.matches(emailRegex)== false) throw new InputNotValidException("E-mail does not have required format");
+        if(age<=0) throw new InputNotValidException("Age can not be zero or negative");
+        if(phoneNumbers == null) throw new InputNotValidException("Phone number map can not be null");
+        if(jobTitle.isEmpty()) throw new InputNotValidException("Job title can not be empty");
+
+        return new User(firstName, lastName, email, age, phoneNumbers, jobTitle, isFavorite);
 
     }
 
