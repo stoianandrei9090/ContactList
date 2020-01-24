@@ -19,10 +19,12 @@ public class Main {
     public static void main(String[] args) {
 
 
-        //userList = createUserList();
-        userList = CreateUserListFromFile("users.config");
-        Map <Integer, User> userIndexMap = printLetterMap(userList);
-        System.out.println(userIndexMap.get(insertUser()));
+        userList = createUserList();
+//        userList.addAll(createUserListFromFile("users.config"));
+        //Map <Integer, User> userIndexMap = printLetterMap(userList);
+        //System.out.println(userIndexMap.get(insertUser()));
+        createUserFile(userList, "output.config");
+
 
 
       /*  try {
@@ -39,7 +41,7 @@ public class Main {
 
     }
 
-    public static List<User> CreateUserListFromFile (String filePath) {
+    public static List<User> createUserListFromFile(String filePath) {
         BufferedReader in = null;
         List<User> listOfUsers = new ArrayList<>();
         List<String> listOfLines = new ArrayList<>();
@@ -91,6 +93,51 @@ public class Main {
         }
 
         return listOfUsers;
+    }
+
+    public static void createUserFile(List<User> inputUserList, String path) {
+
+        List<String> lineList = new ArrayList<>();
+
+        for(User u : inputUserList) {
+            String line = u.getFirstName()+"|"+u.getLastName()+"|"+u.getEmail()+"|"+u.getAge()+"|";
+            Set <Map.Entry<String, PhoneNumber>> entrySet = u.getPhoneNumbers().entrySet();
+            int count = 1;
+            for(Map.Entry<String, PhoneNumber> entry : entrySet) {
+                line+=entry.getKey()+"_"+entry.getValue().getCountryCode()+"_"+entry.getValue().getNumber();
+                if(count < entrySet.size()) line+=",";
+                count++;
+            }
+            Address companyAdress = u.getCompany().getAddress();
+            line+="|"+u.getAddress().getStreetName()+"_"+u.getAddress().getStreetNumber()+"_"+
+                    u.getAddress().getApartmentNumber()+"_"+u.getAddress().getFloor()+
+                    "_"+u.getAddress().getZipCode()+"_"+u.getAddress().getCity()+"_"+u.getAddress().getCountry()+"|"+
+                    u.getJobTitle()+"|"+u.getCompany().getName()+"_"+companyAdress.getStreetName()+"_"+
+                    companyAdress.getStreetNumber()+"_"+companyAdress.getApartmentNumber()+
+                    "_"+companyAdress.getFloor()+"_"+companyAdress.getZipCode()+"_"+
+                    companyAdress.getCity()+"_"+companyAdress.getCountry()+"|"+u.isFavorite();
+            lineList.add(line);
+        }
+
+        BufferedWriter out = null;
+        try {
+            out = new BufferedWriter(new FileWriter(path));
+            int count = 1;
+            for(String line : lineList) {
+                out.write(line);
+                if( count< lineList.size()) out.newLine();
+                count++;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static User InsertUserKeyboard () {
