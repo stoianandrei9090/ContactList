@@ -84,10 +84,10 @@ public class Address {
                 "streetName='" + streetName + '\'' +
                 ", streetNumber=" + streetNumber +
                 ", apartmentNumber=" + apartmentNumber +
-                ", floor='" + floor + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
+                ", floor=" + floor + '\'' +
+                ", zipCode=" + zipCode + '\'' +
+                ", city=" + city + '\'' +
+                ", country=" + country + '\'' +
                 '}';
     }
 }

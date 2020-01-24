@@ -5,6 +5,7 @@ import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
 
+import java.io.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -18,9 +19,10 @@ public class Main {
     public static void main(String[] args) {
 
 
-        userList = createUserList();
-       // Map <Integer, User> userIndexMap = printLetterMap(userList);
-       // System.out.println(userIndexMap.get(insertUser()));
+        //userList = createUserList();
+        userList = CreateUserListFromFile("users.config");
+        Map <Integer, User> userIndexMap = printLetterMap(userList);
+        System.out.println(userIndexMap.get(insertUser()));
 
 
       /*  try {
@@ -32,8 +34,63 @@ public class Main {
 
 
        */
-      User u = InsertUserKeyboard();
+//      User u = InsertUserKeyboard();
 
+
+    }
+
+    public static List<User> CreateUserListFromFile (String filePath) {
+        BufferedReader in = null;
+        List<User> listOfUsers = new ArrayList<>();
+        List<String> listOfLines = new ArrayList<>();
+        try {
+            in = new BufferedReader(new FileReader(filePath));
+            String line = in.readLine();
+            while (line != null) {
+                listOfLines.add(line);
+                line = in.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (String line:listOfLines) {
+            User u = new User();
+            u.setPhoneNumbers(new HashMap<>());
+            String[] lineFields = line.split("\\|");
+            u.setFirstName(lineFields[0]);
+            u.setLastName(lineFields[1]);
+            u.setEmail(lineFields[2]);
+            u.setAge(Integer.parseInt(lineFields[3]));
+            String[] phoneNumbers = lineFields[4].split(",");
+            for(String phoneNumber : phoneNumbers) {
+                String[] phoneNumberField = phoneNumber.split("_");
+                PhoneNumber ph = new PhoneNumber(phoneNumberField[1], phoneNumberField[2]);
+                u.getPhoneNumbers().put(phoneNumberField[0], ph);
+            }
+            String[] addressFields = lineFields[5].split("_");
+            Address a = new Address(addressFields[0], Integer.parseInt(addressFields[1]), Integer.parseInt(addressFields[2]),
+                    addressFields[3], addressFields[4], addressFields[5], addressFields[6]);
+            u.setAddress(a);
+            u.setJobTitle(lineFields[6]);
+            String[] companyFields = lineFields[7].split("_");
+            Address companyAdr = new Address(companyFields[1], Integer.parseInt(companyFields[2]),
+                    Integer.parseInt(companyFields[3]), companyFields[4], companyFields[5], companyFields[6], companyFields[7]);
+            u.setCompany(new Company(companyFields[0], companyAdr));
+            boolean isFavorite = (lineFields[8].equals("true")) ? true : false;
+            u.setFavorite(isFavorite);
+            listOfUsers.add(u);
+
+        }
+
+        return listOfUsers;
     }
 
     public static User InsertUserKeyboard () {
@@ -48,6 +105,7 @@ public class Main {
         Integer age = Integer.parseInt(sc.next());
         System.out.print("Job title :");
         String jobTitle = sc.next();
+
 
         String yesNo = "";
         while(!yesNo.toLowerCase().equals("y") && !yesNo.toLowerCase().equals("n")) {

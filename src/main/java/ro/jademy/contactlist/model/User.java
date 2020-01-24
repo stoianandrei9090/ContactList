@@ -19,6 +19,7 @@ public class User implements Comparable <User> {
 
     private boolean isFavorite;
 
+    public User(){};
 
     public User(String firstName, String lastName, String email, Integer age, Map<String, PhoneNumber> phoneNumbers, String jobTitle, boolean isFavorite) {
         this.firstName = firstName;
