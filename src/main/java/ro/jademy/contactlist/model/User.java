@@ -16,7 +16,15 @@ public class User implements Comparable <User> {
     private String jobTitle;
     private Company company;
 
+    public Integer getUserId() {
+        return userId;
+    }
 
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    private Integer userId;
     private boolean isFavorite;
 
     public User(){};

@@ -4,6 +4,7 @@ import ro.jademy.contactlist.model.Address;
 import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
+import ro.jademy.contactlist.service.FileUserService;
 
 import java.io.*;
 import java.util.*;
@@ -18,127 +19,28 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Menu menu = new Menu(new FileUserService());
+        menu.showMenu();
 
-        userList = createUserList();
-//        userList.addAll(createUserListFromFile("users.config"));
-        //Map <Integer, User> userIndexMap = printLetterMap(userList);
-        //System.out.println(userIndexMap.get(insertUser()));
-       // createUserFile(userList, "output.config");
-
-
-
-      /*  try {
+    /*    userList = new ArrayList<>();
+      //  userList = createUserList();
+       userList.addAll(createUserListFromFile("users.config"));
+        Map <Integer, User> userIndexMap = printLetterMap(userList);
+        System.out.println(userIndexMap.get(insertUser()));
+ //       createUserFile(userList, "output2.config");
+     /*  try {
         User u = createUser("A1212lex", "Popescu", "apopescu@gmail.com", 29, new HashMap<>(), "programmer", true) ;
         }
         catch (InputNotValidException e) {
             System.out.println(e.getMessage());
         }
-
-
-       */
-   User u = InsertUserKeyboard();
-
+      */
 
     }
 
-    public static List<User> createUserListFromFile(String filePath) {
-        BufferedReader in = null;
-        List<User> listOfUsers = new ArrayList<>();
-        List<String> listOfLines = new ArrayList<>();
-        try {
-            in = new BufferedReader(new FileReader(filePath));
-            String line = in.readLine();
-            while (line != null) {
-                listOfLines.add(line);
-                line = in.readLine();
-            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
-        for (String line:listOfLines) {
-            User u = new User();
-            u.setPhoneNumbers(new HashMap<>());
-            String[] lineFields = line.split("\\|");
-            u.setFirstName(lineFields[0]);
-            u.setLastName(lineFields[1]);
-            u.setEmail(lineFields[2]);
-            u.setAge(Integer.parseInt(lineFields[3]));
-            String[] phoneNumbers = lineFields[4].split(",");
-            for(String phoneNumber : phoneNumbers) {
-                String[] phoneNumberField = phoneNumber.split("_");
-                PhoneNumber ph = new PhoneNumber(phoneNumberField[1], phoneNumberField[2]);
-                u.getPhoneNumbers().put(phoneNumberField[0], ph);
-            }
-            String[] addressFields = lineFields[5].split("_");
-            Address a = new Address(addressFields[0], Integer.parseInt(addressFields[1]), Integer.parseInt(addressFields[2]),
-                    addressFields[3], addressFields[4], addressFields[5], addressFields[6]);
-            u.setAddress(a);
-            u.setJobTitle(lineFields[6]);
-            String[] companyFields = lineFields[7].split("_");
-            Address companyAdr = new Address(companyFields[1], Integer.parseInt(companyFields[2]),
-                    Integer.parseInt(companyFields[3]), companyFields[4], companyFields[5], companyFields[6], companyFields[7]);
-            u.setCompany(new Company(companyFields[0], companyAdr));
-            boolean isFavorite = (lineFields[8].equals("true")) ? true : false;
-            u.setFavorite(isFavorite);
-            listOfUsers.add(u);
 
-        }
-
-        return listOfUsers;
-    }
-
-    public static void createUserFile(List<User> inputUserList, String path) {
-
-        List<String> lineList = new ArrayList<>();
-
-        for(User u : inputUserList) {
-            String line = u.getFirstName()+"|"+u.getLastName()+"|"+u.getEmail()+"|"+u.getAge()+"|";
-            Set <Map.Entry<String, PhoneNumber>> entrySet = u.getPhoneNumbers().entrySet();
-            int count = 1;
-            for(Map.Entry<String, PhoneNumber> entry : entrySet) {
-                line+=entry.getKey()+"_"+entry.getValue().getCountryCode()+"_"+entry.getValue().getNumber();
-                if(count < entrySet.size()) line+=",";
-                count++;
-            }
-            Address companyAdress = u.getCompany().getAddress();
-            line+="|"+u.getAddress().getStreetName()+"_"+u.getAddress().getStreetNumber()+"_"+
-                    u.getAddress().getApartmentNumber()+"_"+u.getAddress().getFloor()+
-                    "_"+u.getAddress().getZipCode()+"_"+u.getAddress().getCity()+"_"+u.getAddress().getCountry()+"|"+
-                    u.getJobTitle()+"|"+u.getCompany().getName()+"_"+companyAdress.getStreetName()+"_"+
-                    companyAdress.getStreetNumber()+"_"+companyAdress.getApartmentNumber()+
-                    "_"+companyAdress.getFloor()+"_"+companyAdress.getZipCode()+"_"+
-                    companyAdress.getCity()+"_"+companyAdress.getCountry()+"|"+u.isFavorite();
-            lineList.add(line);
-        }
-
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new FileWriter(path));
-            int count = 1;
-            for(String line : lineList) {
-                out.write(line);
-                if( count< lineList.size()) out.newLine();
-                count++;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public static User InsertUserKeyboard () {
         Scanner sc = new Scanner(System.in);
@@ -169,6 +71,7 @@ public class Main {
             return InsertUserKeyboard();
         }
 
+
         return u;
 
     }
@@ -193,37 +96,6 @@ public class Main {
         if (!messageList.isEmpty())throw new InputNotValidException(messageList);
 
         return new User(firstName, lastName, email, age, phoneNumbers, jobTitle, isFavorite);
-
-    }
-
-    public static void printStuff(List<User> userList) {
-        // list contact list in natural order
-        userList.stream().sorted().forEach(System.out::println);
-        // list contact list by a given criteria
-        Predicate<User> ageCriteria = value -> value.getAge()>=18;
-        Predicate<User> nameStartswith = value -> value.getLastName().startsWith("B");
-        userList.stream().filter(ageCriteria).forEach(System.out::println);
-        // display a favorites list
-        List<User> favoritesList = userList.stream().filter(value-> value.isFavorite()).collect(Collectors.toList());
-        for (User u: favoritesList) {
-            System.out.println(u);
-        }
-        // search by a given or multiple criteria
-        userList.stream().filter(nameStartswith).forEach(System.out::println);
-        // display some statistics for the contact list
-        System.out.println("Number of users : "+userList.stream().count());
-        System.out.println("Average age :"+userList.stream().mapToDouble(value -> value.getAge()).average().getAsDouble());
-        System.out.println("Oldest user :"+userList.stream().max((a,b)-> a.getAge() - b.getAge()).get());
-        Predicate <User> overFifty = value -> value.getAge()>50;
-        System.out.println("Users over fifty :");
-        userList.stream().filter(overFifty).forEach(System.out::println);
-        System.out.println("Users under fifty :");
-        userList.stream().filter(overFifty.negate()).forEach(System.out::println);
-        System.out.println("Print in reverse order :");
-        userList.stream().sorted(Comparator.reverseOrder()).forEach(System.out::println);
-
-        // groups user by city of address
-        Map<String, List<User>> usersByCity = userList.stream().collect(groupingBy(user -> user.getAddress().getCity()));
 
     }
 
