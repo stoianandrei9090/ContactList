@@ -6,7 +6,9 @@ import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class FileUserService implements UserService {
@@ -78,6 +80,7 @@ public class FileUserService implements UserService {
     public void addContact(User user) {
 
         if(contacts.isEmpty()) contacts = getContacts();
+        user.setUserId(contacts.stream().map(v -> v.getUserId()).max(Comparator.naturalOrder()).get()+1);
         contacts.add(user);
         System.out.println("Reached this point");
 //        contacts.add(user);
@@ -89,6 +92,7 @@ public class FileUserService implements UserService {
 
     @Override
     public void removeContact(User Contact) {
+         removeContact(Contact.getUserId());
 
     }
 
@@ -104,13 +108,37 @@ public class FileUserService implements UserService {
 
     @Override
     public void removeContact(int userId) {
+        List<User>temp = contacts.stream().filter(user -> user.getUserId()!=userId).collect(Collectors.toList());
+        contacts.clear();
+        contacts.addAll(temp);
+        writeToFile(contacts);
 
     }
 
     public List<User> search(String query) {
+        contacts = getContacts();
+        List<User> returnList = new ArrayList<>();
+        Field[] fields = User.class.getDeclaredFields();
+        for (User u : contacts) {
+            boolean found = false;
+            for (Field f : fields) {
+                f.setAccessible(true);
+                try {
+                    if(f.get(u).toString().contains(query)) {
+                        returnList.add(u);
+                        found = true;
+                    }
 
-        return null;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if(found) break;
+            }
+        }
+
+    return returnList;
     }
+
 
     private void writeToFile(List<User> contacts) {
 

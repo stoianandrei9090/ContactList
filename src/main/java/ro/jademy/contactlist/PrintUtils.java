@@ -9,20 +9,24 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
+
 public class PrintUtils {
 
     public static User InsertUserKeyboard () {
         Scanner sc = new Scanner(System.in);
         System.out.print("First name : ");
         String firstName = sc.next();
-        System.out.print("Second name: ");
+        System.out.print("Second name : ");
         String lastName = sc.next();
         System.out.print("Email: ");
         String email = sc.next();
-        System.out.print("Age: ");
+        System.out.print("Age : ");
         Integer age = Integer.parseInt(sc.next());
-        System.out.print("Job title :");
-        String jobTitle = sc.next();
+        sc.nextLine();
+        System.out.print("Job title : ");
+        String jobTitle = sc.nextLine();
+     //   sc.nextLine();
 
 
         String yesNo = "";
@@ -61,7 +65,7 @@ public class PrintUtils {
         while (!stop) {
 
             System.out.print("Place : ");
-            String place = sc.next();
+            String place = sc.nextLine();
             if(phoneNumberMap.containsKey(place)) {
                 System.out.println("Key already exists");
                 continue;
@@ -124,7 +128,7 @@ public class PrintUtils {
 
     public static Address insertAddress() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Insert address :");
+        System.out.println("Insert address info ---");
         System.out.print("Street name");
         String streetName = sc.nextLine();
         String streetNumber = "";
@@ -194,6 +198,59 @@ public class PrintUtils {
         System.out.println();
         userList.stream().sorted().forEach(System.out::println);
         System.out.println();
+    }
+
+    public static Map<Integer, User> printLetterMap(List<User> userList) {
+
+
+        TreeMap<Character, List<User>> mapPrint  = new TreeMap<>();
+        mapPrint.putAll(userList.stream().sorted().collect(groupingBy(user -> user.getLastName().charAt(0))));
+        int userIndex = 0;
+        Map<Integer, User> userIndexMap= new HashMap<>();
+
+        for (Map.Entry<Character, List<User>> entry : mapPrint.entrySet()) {
+
+            System.out.println("---------------------------------------------------------------------------------------");
+            System.out.println(String.format("| %-"+85+"s|",entry.getKey()));
+            System.out.println("---------------------------------------------------------------------------------------");
+
+            for (User userPrint : entry.getValue()) {
+
+                userIndex++;
+                String output = String.format("| %-"+85+ "s|", userIndex+" "+userPrint.getFirstName()+" "+userPrint.getLastName()+" --- UserID : "+userPrint.getUserId());
+                userIndexMap.put(userIndex, userPrint);
+                System.out.println(output);
+            }
+            System.out.println(String.format("| %-"+85+"s|","Users : "+entry.getValue().size()));
+
+        }
+
+        System.out.println("---------------------------------------------------------------------------------------");
+        return userIndexMap;
+
+    }
+
+    public static void printUserFromMap (Map <Integer, User> map, int i) {
+        System.out.println(map.get(i));
+    }
+
+    public static Integer getUserIdFromMap(Map<Integer, User> map, int i) {
+        return map.get(i).getUserId();
+    }
+
+    public static int insertUser() {
+        System.out.print("Insert user : ");
+        Scanner sc = new Scanner(System.in);
+        int intUser = 0;
+        try {
+            intUser = sc.nextInt();
+
+        } catch (InputMismatchException e) {
+            System.out.println("Insert int value!");
+            return insertUser();
+        }
+        return intUser;
+
     }
 
 }
