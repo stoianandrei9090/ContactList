@@ -5,6 +5,7 @@ import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +18,12 @@ public class MemoryUserService implements UserService {
     @Override
     public List<User> getContacts() {
 
+        if(contacts.isEmpty())initContactList();
+        return contacts;
+
+    }
+
+    private void initContactList() {
         List<User> userList = new ArrayList<>();
         User u1 = new User("Andrei", "Stoian", "stoianandrei@yahoo.com", 32, new HashMap<>(),"junior programmer", false );
         u1.getPhoneNumbers().put("home", new PhoneNumber("+40", "728570162"));
@@ -56,17 +63,17 @@ public class MemoryUserService implements UserService {
         int i = 0;
         for(User u : userList) {
             u.setUserId(i);
+            i++;
         }
 
-        if(contacts.isEmpty()) contacts.addAll(userList);
-        return userList;
+        contacts.addAll(userList);
 
     }
 
     @Override
     public void addContact(User contact) {
         if(contacts.isEmpty())getContacts();
-        contact.setUserId(contacts.stream().map(u->u.getUserId()).max(Comparator.naturalOrder()).get()+1);
+        contact.setUserId(contacts.stream().map(User::getUserId).max(Comparator.naturalOrder()).get()+1);
         contacts.add(contact);
     }
 
@@ -88,12 +95,32 @@ public class MemoryUserService implements UserService {
 
     @Override
     public void removeContact(int userId) {
+        getContacts();
         contacts.removeIf(u->u.getUserId()==userId);
 
     }
 
     @Override
     public List<User> search(String query) {
-        return contacts.stream().filter(u -> u.toString().contains(query)).collect(Collectors.toList());
+        contacts = getContacts();
+        List<User> returnList = new ArrayList<>();
+        Field[] fields = User.class.getDeclaredFields();
+        for (User u : contacts) {
+            boolean found = false;
+            for (Field f : fields) {
+                f.setAccessible(true);
+                try {
+                    if(f.get(u).toString().contains(query)) {
+                        returnList.add(u);
+                        found = true;
+                    }
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if(found) break;
+            }
+        }
+    return returnList;
     }
 }

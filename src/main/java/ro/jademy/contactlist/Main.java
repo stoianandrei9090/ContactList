@@ -5,6 +5,8 @@ import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
 import ro.jademy.contactlist.service.FileUserService;
+import ro.jademy.contactlist.service.MemoryUserService;
+
 import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;

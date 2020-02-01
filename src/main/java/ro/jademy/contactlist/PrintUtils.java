@@ -34,7 +34,7 @@ public class PrintUtils {
             System.out.print("Favorite (Y/N)? ");
             yesNo = sc.next();
         }
-        boolean isFavorite = yesNo.toLowerCase().equals("y") ? true : false;
+        boolean isFavorite = yesNo.toLowerCase().equals("y");
 
         User u;
         try{
@@ -76,7 +76,7 @@ public class PrintUtils {
                 System.out.print("Insert another phone number (Y/N)? ");
                 yesNo = sc.next();
             }
-            stop = yesNo.toLowerCase().equals("y") ? false : true;
+            stop = yesNo.toLowerCase().equals("y");
 
 
         }
@@ -115,7 +115,7 @@ public class PrintUtils {
 
         if(firstName.length() <= 1 || !firstName.matches("^[a-zA-Z]*$")) messageList.add("First name is not valid");
         if(lastName.isEmpty()) messageList.add("Last name can not be empty");
-        if(email.matches(emailRegex)== false) messageList.add("E-mail does not have required format");
+        if(!email.matches(emailRegex)) messageList.add("E-mail does not have required format");
         if(age<=0) messageList.add("Age can not be zero or negative");
         if(phoneNumbers == null) messageList.add("Phone number map can not be null");
         if(jobTitle.isEmpty()) messageList.add("Job title can not be empty");
@@ -183,7 +183,8 @@ public class PrintUtils {
     System.out.println("Users over fifty :");
     userList.stream().filter(overFifty).map(u-> u.getFirstName()+" "+u.getLastName()).forEach(System.out::println);
     System.out.println("Users under fifty :");
-    userList.stream().filter(overFifty).map(u-> u.getFirstName()+" "+u.getLastName()).forEach(System.out::println);
+    userList.stream().filter(overFifty.negate()).
+            map(u-> u.getFirstName()+" "+u.getLastName()).forEach(System.out::println);
     }
 
     public static void printFavorites(List<User> userList) {

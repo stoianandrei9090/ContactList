@@ -99,6 +99,10 @@ public class FileUserService implements UserService {
     @Override
     public void editContact(User contact) {
 
+        contacts.removeIf(u -> u.getUserId() == contact.getUserId());
+        contacts.add(contact);
+        writeToFile(contacts);
+
     }
 
     @Override
@@ -139,13 +143,16 @@ public class FileUserService implements UserService {
     return returnList;
     }
 
-
     private void writeToFile(List<User> contacts) {
+        writeToFile(contacts, "users.config");
+    }
+
+    public void writeToFile(List<User> contacts, String path){
 
         List<String> lineList = new ArrayList<>();
         List<User> inputUserList = new ArrayList<>();
         inputUserList.addAll(contacts);
-        String path = "users.config";
+      //  String path = "users.config";
 
         for(User u : inputUserList) {
             String line = u.getFirstName()+"|"+u.getLastName()+"|"+u.getEmail()+"|"+u.getAge()+"|";
