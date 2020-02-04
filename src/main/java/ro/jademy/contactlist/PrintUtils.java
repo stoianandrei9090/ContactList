@@ -76,7 +76,8 @@ public class PrintUtils {
                 System.out.print("Insert another phone number (Y/N)? ");
                 yesNo = sc.next();
             }
-            stop = yesNo.toLowerCase().equals("y");
+            stop = (yesNo.toLowerCase().equals("y") == true) ? false : true;
+            if(!stop) sc.nextLine();
 
 
         }
