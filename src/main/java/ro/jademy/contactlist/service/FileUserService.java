@@ -107,7 +107,8 @@ public class FileUserService implements UserService {
 
     @Override
     public void editContact(int userId) {
-
+        //not needed
+         writeToFile(contacts);
     }
 
     @Override
@@ -141,6 +142,13 @@ public class FileUserService implements UserService {
         }
 
     return returnList;
+    }
+
+    @Override
+    public User getContact(int userId) {
+        Optional<User> optionalUser = contacts.stream().filter(u->u.getUserId()==userId).findFirst();
+        if(optionalUser.isPresent()) return optionalUser.get();
+        else return null;
     }
 
     private void writeToFile(List<User> contacts) {

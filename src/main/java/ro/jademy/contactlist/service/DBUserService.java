@@ -23,6 +23,13 @@ public class DBUserService implements UserService {
     }
 
     @Override
+    public User getContact(int userId) {
+        Optional<User> optionalUser = contacts.stream().filter(u->u.getUserId()==userId).findFirst();
+        if(optionalUser.isPresent()) return optionalUser.get();
+        else return null;
+    }
+
+    @Override
     public void editContact(int userId) {
 
     }

@@ -1,5 +1,6 @@
 package ro.jademy.contactlist.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,27 @@ public class User implements Comparable <User> {
 
     private String jobTitle;
     private Company company;
+
+
+
+    public static User getInstance() {
+        Address defaultAddress = new Address("Default Street", 1, 1, "1", "100000",
+            "Bucharest", "Romania");
+        Address defaultAddress2 = new Address("Default Street", 1, 1, "1", "100000",
+                "Bucharest", "Romania");
+        PhoneNumber defaultPhoneNumber = new PhoneNumber("+40", "600000");
+        Company defaultCompany = new Company("Default Company", defaultAddress2);
+
+
+
+        Map <String, PhoneNumber> map = new HashMap<>();
+        map.put("default", defaultPhoneNumber);
+        User u = new User("First Name", "Last Name", "email@gmail.com", 40, map,
+                "defaultJobTitle", false);
+        u.setAddress(defaultAddress);
+        u.setCompany(defaultCompany);
+        return u;
+    }
 
     public Integer getUserId() {
         return userId;

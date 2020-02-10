@@ -6,10 +6,7 @@ import ro.jademy.contactlist.model.PhoneNumber;
 import ro.jademy.contactlist.model.User;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MemoryUserService implements UserService {
@@ -76,6 +73,14 @@ public class MemoryUserService implements UserService {
         contact.setUserId(contacts.stream().map(User::getUserId).max(Comparator.naturalOrder()).get()+1);
         contacts.add(contact);
     }
+
+    @Override
+    public User getContact(int userId) {
+        Optional<User> optionalUser = contacts.stream().filter(u->u.getUserId()==userId).findFirst();
+        if(optionalUser.isPresent()) return optionalUser.get();
+        else return null;
+    }
+
 
     @Override
     public void editContact(User contact) {

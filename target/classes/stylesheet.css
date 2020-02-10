@@ -1,0 +1,61 @@
+.upper-pane-options {
+    -fx-border-radius: 15px;
+    -fx-overflow:hidden;
+    -fx-background-radius: 15px;
+    -fx-text-fill: #A52A2A;
+}
+.upper-pane-options:hover {
+    -fx-background-color: black;
+    -fx-text-fill: pink;
+}
+
+
+.upper-pane-options:visited {
+
+}
+
+
+.left-pane-arrows {
+-fx-fill: #A52A2A;
+}
+
+.left-pane-arrows:hover {
+-fx-cursor: hand;
+}
+
+.upper-left-corner {
+-fx-background-color:grey;
+}
+
+.left-scroll-pane {
+-fx-background-color: transparent;
+
+}
+
+.left-scroll-pane .vbox {
+-fx-fill: white;
+}
+
+.left-scroll-pane > .viewport {
+-fx-background-color: transparent;
+}
+
+.right-pane-text-label {
+-fx-text-fill:#A52A2A;
+}
+
+.left-scroll-pane .hyperlink {
+-fx-background-color: white;
+}
+
+.right-pane-hyperlinks {
+-fx-text-fill: dodgerblue;
+}
+
+.right-pane-hyperlinks:visited {
+-fx-text-fill: dodgerblue;
+-fx-underline: false;
+}
+
+
+

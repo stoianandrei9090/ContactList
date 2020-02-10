@@ -7,6 +7,7 @@ import java.util.List;
 public interface UserService {
     public List<User> getContacts();
     public void addContact(User contact);
+    public User getContact(int userId);
     void editContact(User contact);
     void editContact(int userId);
     void removeContact(User contact);
