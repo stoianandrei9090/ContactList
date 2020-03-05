@@ -20,7 +20,6 @@ import ro.jademy.contactlist.model.Address;
 import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.User;
 
-import javax.swing.*;
 
 public class EditCompany {
 

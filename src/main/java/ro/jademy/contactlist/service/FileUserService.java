@@ -1,5 +1,7 @@
 package ro.jademy.contactlist.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ro.jademy.contactlist.model.Address;
 import ro.jademy.contactlist.model.Company;
 import ro.jademy.contactlist.model.PhoneNumber;
@@ -7,6 +9,8 @@ import ro.jademy.contactlist.model.User;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,8 +20,11 @@ public class FileUserService implements UserService {
     private List<User> contacts = new ArrayList<>();
 
     public List<User> getContacts() {
+        return getContacts("users.config");
+    }
+
+    public List<User> getContacts(String filePath) {
        if(contacts.isEmpty()) {
-           String filePath = "users.config";
            BufferedReader in = null;
            List<User> listOfUsers = new ArrayList<>();
            List<String> listOfLines = new ArrayList<>();
@@ -204,4 +211,38 @@ public class FileUserService implements UserService {
 
     }
 
+    public boolean checkFile() {
+
+        writeToFile(contacts, "temp.config");
+
+        try{
+            byte[] b1 = Files.readAllBytes(Paths.get("users.config"));
+            byte[] b2 = Files.readAllBytes(Paths.get("temp.config"));
+            if(Arrays.compare(b1, b2) == 0) return false;
+            else return true;
+        } catch (IOException e) {
+            System.out.println("Can not compare!");
+        }
+       return false;
+    }
+
+    public void writeToJson(List<User> contacts, String path) {
+ //       String json =
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(contacts);
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(path));
+            bufferedWriter.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

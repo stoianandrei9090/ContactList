@@ -17,6 +17,9 @@ public class User implements Comparable <User> {
     private String jobTitle;
     private Company company;
 
+    private transient Integer userId;
+    private boolean isFavorite;
+
 
 
     public static User getInstance() {
@@ -46,8 +49,6 @@ public class User implements Comparable <User> {
         this.userId = userId;
     }
 
-    private Integer userId;
-    private boolean isFavorite;
 
     public User(){};
 

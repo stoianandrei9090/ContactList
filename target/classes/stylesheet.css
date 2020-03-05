@@ -57,5 +57,9 @@
 -fx-underline: false;
 }
 
+.bottom-right-pane {
+-fx-background-color: white;
+}
+
 
 
